@@ -573,7 +573,7 @@
                            Margin="0,8,0,0"
                            HorizontalAlignment="Center"
                            Foreground="{StaticResource TextSecondaryBrush}" />
-                <TextBlock Text="素材会实际复制进素材库，原始文件不会被修改"
+                <TextBlock Text="{Binding ImportTargetText}"
                            FontSize="12"
                            Margin="0,4,0,0"
                            HorizontalAlignment="Center"

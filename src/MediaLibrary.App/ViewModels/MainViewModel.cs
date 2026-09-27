@@ -294,7 +294,12 @@ public partial class MainViewModel : ObservableObject, IDisposable
                     ? $"{p.Stage} {p.Processed}/{p.Total}：{p.CurrentItem}"
                     : p.Stage);
 
-            var result = await _importService.ImportAsync(droppedPaths, progress, ct).ConfigureAwait(true);
+            var result = await _importService.ImportAsync(
+                droppedPaths, progress, ct,
+                // ★ 选中了某个文件夹时，拖入的文件全部进该文件夹（而不是按源文件夹新建）
+                targetFolderKey: SelectedFolder is { FolderKey: not "" } folder
+                    ? folder.FolderKey
+                    : null).ConfigureAwait(true);
             DiagnosticsLog.Mark($"导入计划完成 → {result}");
 
             if (result.Enqueued == 0)
@@ -477,10 +482,18 @@ public partial class MainViewModel : ObservableObject, IDisposable
             FolderTree[0].IsExpanded = true;
     }
 
+    /// <summary>拖入提示（选中文件夹时告知将导入到该文件夹）。</summary>
+    public string ImportTargetText =>
+        SelectedFolder is { FolderKey: not "" } folder
+            ? $"将导入到「{folder.Name}」"
+            : "素材会实际复制进素材库，原始文件不会被修改";
+
     partial void OnSelectedFolderChanged(FolderNodeViewModel? value)
     {
         foreach (var node in EnumerateAll(FolderTree))
             node.IsSelected = ReferenceEquals(node, value);
+
+        OnPropertyChanged(nameof(ImportTargetText));
 
         if (value is null)
         {

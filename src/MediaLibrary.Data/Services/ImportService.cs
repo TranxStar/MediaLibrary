@@ -54,11 +54,14 @@ public sealed class ImportService(
 
     /// <summary>
     /// 执行一次导入。返回后素材已是 <see cref="AssetStatus.Pending"/> 状态并已排入任务队列。
+    /// <paramref name="targetFolderKey"/> 非空时，全部文件导入到该目录
+    /// （而不是按源文件夹结构新建目录）—— 界面选中某文件夹后拖入即此路径。
     /// </summary>
     public async Task<ImportResult> ImportAsync(
         IEnumerable<string> droppedPaths,
         IProgress<ImportProgress>? progress = null,
-        CancellationToken ct = default)
+        CancellationToken ct = default,
+        string? targetFolderKey = null)
     {
         var sw = Stopwatch.StartNew();
 
@@ -70,6 +73,15 @@ public sealed class ImportService(
 
         if (expanded.Count == 0)
             return ImportResult.Empty with { Elapsed = sw.Elapsed };
+
+        // ── 第 1.5 步：目标目录覆盖 ─────────────────────────────
+        // 选中文件夹后拖入 → 全部进该文件夹，命名也用该文件夹的名字
+        if (!string.IsNullOrWhiteSpace(targetFolderKey))
+        {
+            expanded = expanded
+                .Select(s => s with { FolderKey = targetFolderKey })
+                .ToList();
+        }
 
         // ── 第 2 步：哈希 + 分类 ───────────────────────────────
         var skipped = new List<SkippedImport>();

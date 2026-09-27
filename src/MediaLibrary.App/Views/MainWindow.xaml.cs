@@ -397,7 +397,9 @@ public partial class MainWindow : Window
             Check("现场合成测试素材", ok && File.Exists(videoSrc) && File.Exists(photoSrc) && File.Exists(audioSrc),
                 "1 视频 + 1 照片 + 1 音频");
 
-            // ── 1. 导入并等待全部就绪 ──
+            // ── 1. 选中文件夹后导入 → 文件应进【该文件夹】而不是新建（用户实测重大 bug）──
+            await _viewModel.CreateFolderAsync(null, "目标文件夹");
+
             await _viewModel.ImportAsync([srcDir]);
 
             var ready = await WaitUntilAsync(
@@ -411,6 +413,11 @@ public partial class MainWindow : Window
             Check("导入后全部就绪", ready,
                 $"素材 {_viewModel.Assets.Count} 个，" +
                 $"状态 {string.Join("/", _viewModel.Assets.Select(a => a.Status))}");
+
+            var allInTargetFolder = _viewModel.Assets.All(a => a.Asset.FolderKey == "目标文件夹");
+            Check("选中文件夹后拖入：文件进入该文件夹（不新建目录）",
+                ready && allInTargetFolder,
+                $"FolderKey = {string.Join(" / ", _viewModel.Assets.Select(a => a.Asset.FolderKey).Distinct())}");
 
             // ── 1b. FLAC 悬浮预览播放（用户实测：flac 播放不了）──
             var flac = _viewModel.Assets.FirstOrDefault(a => a.Kind == Core.Models.AssetKind.Audio);
