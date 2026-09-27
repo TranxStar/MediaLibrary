@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <Platforms>x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
+    <RootNamespace>MediaLibrary.SmokeTest</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\MediaLibrary.Core\MediaLibrary.Core.csproj" />
+    <ProjectReference Include="..\..\src\MediaLibrary.Data\MediaLibrary.Data.csproj" />
+    <ProjectReference Include="..\..\src\MediaLibrary.Media\MediaLibrary.Media.csproj" />
+  </ItemGroup>
+
+</Project>

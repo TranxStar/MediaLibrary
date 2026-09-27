@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/MediaLibrary.App/MediaLibrary.App.csproj" />
+    <Project Path="src/MediaLibrary.Core/MediaLibrary.Core.csproj" />
+    <Project Path="src/MediaLibrary.Data/MediaLibrary.Data.csproj" />
+    <Project Path="src/MediaLibrary.Media/MediaLibrary.Media.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/MediaLibrary.Core.Tests/MediaLibrary.Core.Tests.csproj" />
+    <Project Path="tests/MediaLibrary.SmokeTest/MediaLibrary.SmokeTest.csproj" />
+  </Folder>
+</Solution>

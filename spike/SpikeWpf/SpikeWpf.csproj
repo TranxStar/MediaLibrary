@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <!-- System.Drawing 用于屏幕截图（GDI 能抓到原生子窗口，WPF 的
+         RenderTargetBitmap 抓不到 —— 那正是空域问题本身） -->
+    <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Platforms>x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
+    <LangVersion>latest</LangVersion>
+    <!-- WFO0003: WinForms SDK 建议用 ApplicationHighDpiMode 配置 DPI。
+         但本项目是 WPF，DPI 感知必须走 app.manifest（PerMonitorV2），故忽略。 -->
+    <NoWarn>$(NoWarn);WFO0003</NoWarn>
+
+    <!-- 只投递 x64 原生库（否则会带上 x86 + arm64 共 299 MB） -->
+    <VlcWindowsX64Enabled>true</VlcWindowsX64Enabled>
+    <VlcWindowsX86Enabled>false</VlcWindowsX86Enabled>
+    <VlcWindowsArm64Enabled>false</VlcWindowsArm64Enabled>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- UseWPF + UseWindowsForms 会同时注入 System.Windows.Forms 的隐式 using，
+         导致 Application/MessageBox 等类型在 WPF 代码里产生 CS0104 歧义。移除之。 -->
+    <Using Remove="System.Windows.Forms" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LibVLCSharp" Version="3.10.1" />
+    <PackageReference Include="LibVLCSharp.WPF" Version="3.10.1" />
+    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.24" />
+  </ItemGroup>
+
+</Project>

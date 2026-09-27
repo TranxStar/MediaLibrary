@@ -1,0 +1,63 @@
+<Window x:Class="MediaLibrary.App.Views.LibraryPickerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="选择素材库文件夹"
+        Width="520" Height="330"
+        MinWidth="460" MinHeight="300"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        Background="{StaticResource WindowBackgroundBrush}"
+        TextOptions.TextFormattingMode="Display">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="选择素材存放的文件夹"
+                   FontSize="16" FontWeight="SemiBold"
+                   Foreground="{StaticResource TextPrimaryBrush}" />
+        <TextBlock Grid.Row="1" Margin="0,6,0,0" TextWrapping="Wrap" FontSize="11"
+                   Foreground="{StaticResource TextSecondaryBrush}"
+                   Text="直接选择文件夹即可（无需输入路径）。素材会被复制到这里并统一转码。" />
+
+        <!-- 已选路径（只读显示） -->
+        <Border Grid.Row="2" Margin="0,14,0,0" Padding="10,8"
+                Background="{StaticResource CardBackgroundBrush}"
+                BorderBrush="{StaticResource BorderBrushDark}"
+                BorderThickness="1" CornerRadius="6">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="📂" FontSize="14" VerticalAlignment="Center"
+                           Foreground="{StaticResource AccentBrush}" />
+                <TextBlock x:Name="PathText" Margin="8,0,0,0" VerticalAlignment="Center"
+                           FontSize="13" TextTrimming="CharacterEllipsis" MaxWidth="400"
+                           Foreground="{StaticResource TextPrimaryBrush}"
+                           Text="（尚未选择）" />
+            </StackPanel>
+        </Border>
+
+        <StackPanel Grid.Row="3" Margin="0,10,0,0">
+            <TextBlock x:Name="HintText" FontSize="11" TextWrapping="Wrap"
+                       Foreground="{StaticResource TextSecondaryBrush}" />
+            <TextBlock x:Name="ErrorText" Margin="0,4,0,0" FontSize="11"
+                       TextWrapping="Wrap"
+                       Foreground="{StaticResource DangerBrush}"
+                       Visibility="Collapsed" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
+            <Button x:Name="BrowseButton" Content="📂 选择文件夹…" Click="OnBrowse" />
+            <Button x:Name="ConfirmButton" Content="确定" Width="90" Margin="10,0,0,0"
+                    IsEnabled="False" Click="OnConfirm" />
+            <Button Content="取消" Width="70" Margin="10,0,0,0" IsCancel="True" />
+        </StackPanel>
+    </Grid>
+</Window>

@@ -1,0 +1,56 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <LangVersion>latest</LangVersion>
+    <Platforms>x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AssemblyName>MediaLibrary</AssemblyName>
+    <RootNamespace>MediaLibrary.App</RootNamespace>
+    <NoWarn>$(NoWarn);CA1416</NoWarn>
+    <SatelliteResourceLanguages>zh-Hans</SatelliteResourceLanguages>
+    <ApplicationIcon>assets\app.ico</ApplicationIcon>
+
+    <!-- 同 Media 项目：只投递 x64 的 libvlc 原生库 -->
+    <VlcWindowsX64Enabled>true</VlcWindowsX64Enabled>
+    <VlcWindowsX86Enabled>false</VlcWindowsX86Enabled>
+    <VlcWindowsArm64Enabled>false</VlcWindowsArm64Enabled>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="VirtualizingWrapPanel" Version="2.5.4" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
+    <!-- WPF 版的 VideoView（悬浮预览窗口用）。原生 libvlc 由 Media 项目传递过来。 -->
+    <PackageReference Include="LibVLCSharp.WPF" Version="3.10.1" />
+  </ItemGroup>
+
+  <!-- 窗口与资源管理器图标（阶段 4） -->
+  <ItemGroup>
+    <Resource Include="assets\app.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MediaLibrary.Core\MediaLibrary.Core.csproj" />
+    <ProjectReference Include="..\MediaLibrary.Data\MediaLibrary.Data.csproj" />
+    <ProjectReference Include="..\MediaLibrary.Media\MediaLibrary.Media.csproj" />
+  </ItemGroup>
+
+  <!--
+    ffmpeg 二进制不参与日常构建（共 314 MB，每次拷贝太慢）。
+    运行时由 FfmpegLocator 向上搜索仓库根的 tools\ffmpeg\。
+    仅在发布时才拷贝进输出目录。
+  -->
+  <ItemGroup Condition="'$(Configuration)' == 'Release' And '$(PublishDir)' != ''">
+    <Content Include="..\..\tools\ffmpeg\ffmpeg.exe"  Link="Tools\ffmpeg.exe"  CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="..\..\tools\ffmpeg\ffprobe.exe" Link="Tools\ffprobe.exe" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

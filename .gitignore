@@ -1,0 +1,25 @@
+# 构建产物
+bin/
+obj/
+dist/
+publish/
+*.user
+.vs/
+*.suo
+
+# 素材库运行数据
+.cache/
+.tmp/
+*.db
+*.db-wal
+*.db-shm
+
+# ffmpeg 二进制（约 100MB，见 README 下载说明）
+tools/ffmpeg/
+
+# 安装包输出
+installer/dist/
+installer/publish/
+
+# 诊断/测试临时
+*.log

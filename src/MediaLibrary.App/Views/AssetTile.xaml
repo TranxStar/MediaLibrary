@@ -1,0 +1,123 @@
+<UserControl x:Class="MediaLibrary.App.Views.AssetTile"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:MediaLibrary.App.ViewModels"
+             mc:Ignorable="d"
+             x:Name="Root"
+             d:DataContext="{d:DesignInstance Type=vm:AssetItemViewModel}"
+             Width="{Binding TileWidth, ElementName=Root}"
+             Height="{Binding TileWidth, ElementName=Root, Converter={StaticResource TileHeight}}"
+             ToolTip="{Binding TooltipText}"
+             Loaded="OnLoaded">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="34" />
+        </Grid.RowDefinitions>
+
+        <!-- ═══ 缩略图区（16:9）═══ -->
+        <Border Grid.Row="0" Background="#FF141414" CornerRadius="5,5,0,0" ClipToBounds="True">
+            <Grid>
+
+                <!-- 缩略图 -->
+                <Image Source="{Binding Thumbnail}"
+                       Stretch="Uniform"
+                       RenderOptions.BitmapScalingMode="HighQuality"
+                       SnapsToDevicePixels="True" />
+
+                <!-- 占位：还没有缩略图 -->
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center"
+                            Visibility="{Binding ShowPlaceholder, Converter={StaticResource BoolToVisibility}}">
+
+                    <!-- 失败 -->
+                    <TextBlock Text="⚠"
+                               FontSize="26"
+                               Foreground="{StaticResource DangerBrush}"
+                               HorizontalAlignment="Center"
+                               Visibility="{Binding IsFailed, Converter={StaticResource BoolToVisibility}}" />
+
+                    <!-- 正常占位：显示目标扩展名 -->
+                    <TextBlock Text="{Binding ExtensionLabel}"
+                               FontFamily="{StaticResource MonoFont}"
+                               FontSize="22"
+                               Foreground="#FF4A4A4A"
+                               HorizontalAlignment="Center"
+                               Visibility="{Binding IsFailed, Converter={StaticResource InverseBoolToVisibility}}" />
+                </StackPanel>
+
+                <!-- 丢失遮罩 -->
+                <Border Background="#B0000000"
+                        Visibility="{Binding IsMissing, Converter={StaticResource BoolToVisibility}}">
+                    <TextBlock Text="文件丢失"
+                               VerticalAlignment="Center" HorizontalAlignment="Center"
+                               Foreground="{StaticResource WarningBrush}" FontSize="13" />
+                </Border>
+
+                <!-- 处理中 / 排队中：居中状态文字 -->
+                <Border HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Padding="9,3" CornerRadius="3" Background="#B0000000"
+                        Visibility="{Binding ShowProgressBar, Converter={StaticResource BoolToVisibility}}">
+                    <TextBlock FontSize="11" Foreground="{StaticResource AccentBrush}">
+                        <Run Text="{Binding StatusText, Mode=OneWay}" />
+                        <Run Text=" " />
+                        <Run Text="{Binding ProgressText, Mode=OneWay}" />
+                    </TextBlock>
+                </Border>
+
+                <!-- 左下：种类角标 -->
+                <Border HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                        Margin="6,6,6,8" Padding="5,1"
+                        CornerRadius="3"
+                        Background="#99000000"
+                        Visibility="{Binding KindGlyph, Converter={StaticResource EmptyToCollapsed}}">
+                    <TextBlock Text="{Binding KindGlyph}" FontSize="11" Foreground="#FFE0E0E0" />
+                </Border>
+
+                <!-- 右下：时长角标 -->
+                <Border HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                        Margin="6,6,6,8" Padding="5,1"
+                        CornerRadius="3"
+                        Background="#99000000"
+                        Visibility="{Binding HasDuration, Converter={StaticResource BoolToVisibility}}">
+                    <TextBlock Text="{Binding DurationText}"
+                               FontFamily="{StaticResource MonoFont}"
+                               FontSize="11"
+                               Foreground="#FFE0E0E0" />
+                </Border>
+
+                <!-- 底部：处理进度条（贴住缩略图下沿）-->
+                <ProgressBar Height="3"
+                             VerticalAlignment="Bottom"
+                             Minimum="0" Maximum="1"
+                             Value="{Binding ProgressFraction, Mode=OneWay}"
+                             Background="Transparent" BorderThickness="0"
+                             Visibility="{Binding ShowProgressBar, Converter={StaticResource BoolToVisibility}}">
+                    <ProgressBar.Template>
+                        <ControlTemplate TargetType="ProgressBar">
+                            <Grid>
+                                <Rectangle Fill="#66000000" />
+                                <Rectangle x:Name="PART_Track" />
+                                <Rectangle x:Name="PART_Indicator"
+                                           Fill="{StaticResource AccentBrush}"
+                                           HorizontalAlignment="Left" />
+                            </Grid>
+                        </ControlTemplate>
+                    </ProgressBar.Template>
+                </ProgressBar>
+            </Grid>
+        </Border>
+
+        <!-- ═══ 文件名 ═══ -->
+        <Grid Grid.Row="1" Margin="8,0,8,0">
+            <TextBlock Text="{Binding FileName}"
+                       VerticalAlignment="Center"
+                       TextTrimming="CharacterEllipsis"
+                       ToolTip="{Binding FileName}"
+                       Foreground="{StaticResource TextPrimaryBrush}"
+                       FontSize="12" />
+        </Grid>
+    </Grid>
+</UserControl>

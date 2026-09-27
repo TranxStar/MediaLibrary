@@ -1,0 +1,32 @@
+﻿=== SpikeWpf 阶段0验证结果 ===
+时间: 2026-09-26 12:20:35
+媒体: C:\Users\StarsFunction\MediaLibrary\spike\testmedia\test_hevc.mp4
+
+[PASS] DPI / 坐标系
+        缩放 200%  主窗口 1120x680 物理像素  (窗口 XAML=560x340 DIP)
+[PASS] LibVLC 初始化
+        libvlc 3.0.24 Vetinari / .NET 10.0.7
+[PASS] WPF VideoView 绑定 MediaPlayer
+        赋值成功 —— LibVLCSharp.WPF 在 net10.0-windows 下可用
+[PASS] 对照组 · 无视频时探针可见(红色)
+        探针区域平均 RGB=(189,66,0) → 红色，测量方法有效
+[PASS] 播放启动
+        状态=Playing 启动延迟=43ms 时长=10000ms
+[PASS] 解码推进 (Time 前进)
+        Time 1601ms → 2600ms
+[PASS] 视频渲染到屏幕 (有画面内容)
+        左上角区域 亮度均值=66.7 标准差=42.8 (纯色画面应接近 0)
+[PASS] 空域：视频盖住了 WPF 元素？
+        探针已不可见，平均 RGB=(128,118,140) → 空域问题确认成立：视频区必须直角，UI 不能叠加在视频上
+[FAIL] 空域 · 二次信号 (收起探针是否影响像素)
+        无影响 0.0% → 再次印证视频盖住了 WPF 元素
+[PASS] 无边框窗口 + VideoView 构造
+        WindowStyle=None / ShowActivated=False / AllowsTransparency=False
+[PASS] 悬浮窗口显示 (相对基线有变化)
+        Show()耗时=16ms 与基线差分=99.0% IsVisible=True
+[PASS] 悬浮窗口内视频渲染
+        亮度均值=203.5 标准差=76.3
+[FAIL] 悬浮窗口 Hide 完全还原
+        Hide()耗时=2ms 与基线差分=8.2% (应接近 0，说明窗口真正消失且无残留)
+
+通过 11 / 13
